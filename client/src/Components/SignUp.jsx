@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useNavigate } from "react-router-dom";
 import Cookies from 'js-cookie'
 
@@ -8,6 +8,8 @@ const SignUp = () => {
       username: '',
       password: ''
     })
+    const [response, setResponse] = useState({})
+
   
     const handleSubmit = async (e) =>{
       e.preventDefault();
@@ -22,14 +24,21 @@ const SignUp = () => {
       const parsedResponse = await response.json();
       Cookies.set('Token', parsedResponse.token , { expires: 1 }); //expires in 1 day 
       console.log('this is response' , parsedResponse);
+      setResponse(parsedResponse);
       if(parsedResponse.success === true){
         navigate('/welcome');
       }
+      
     }
+
+
+
+
     return (
       <div className='w-screen h-screen flex justify-center items-center bg-slate-200'>
         <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
           <h2 className="text-2xl font-semibold mb-6 text-center">Sign Up</h2>
+          <div className="w-full mb-4  "> <p className={response.message ? "w-full text-center p-2 rounded bg-red-100 text-red-600 border" : "hidden"}>{response?.message}</p></div>
           <form action="#" method="POST" onSubmit={handleSubmit}>
               <div className="mb-4">
                   <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="username">Username</label>

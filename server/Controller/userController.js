@@ -11,7 +11,7 @@ const signUpController = async (req, res) => {
     try {
       let user = await User.findOne({username});
       if (user) {
-        return res.status(400).json({msg: "User Already Exists"});
+        return res.status(400).json({message: "User Already Exists"});
       }
 
       user = new User({username, password});
@@ -35,7 +35,7 @@ const signUpController = async (req, res) => {
       );
     } catch (err) {
       console.log(err);
-      res.status(500).send("Error in Saving");
+      res.status(500).json({message:"Error in Saving"});
     }
   }
 
@@ -45,7 +45,7 @@ const signUpController = async (req, res) => {
       let user = await User.findOne({
         username
       });
-      if (!user) return res.status(400).json({message: "User Not Exist"});
+      if (!user) return res.status(400).json({message: "User does not exist"});
 
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch)
@@ -79,8 +79,7 @@ const signUpController = async (req, res) => {
     try {
       // request.user is getting fetched from Middleware after token authentication
       const user = await User.findById(req.user.id);
-      res.clearCookie('token');
-      res.json(user);
+      res.json({user: user, success: true});
     } catch (e) {
       res.send({ message: "Error in Fetching user" });
     }
